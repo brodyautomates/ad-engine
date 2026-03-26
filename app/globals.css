@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mint: #00FFAB;
+  --color-mint-dim: #00cc89;
+  --color-surface: #0a0a0a;
+  --color-surface-raised: #141414;
+  --color-surface-overlay: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #888888;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.glass {
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+}
+
+.glow {
+  box-shadow: 0 0 30px rgba(0, 255, 171, 0.1);
+}
+
+@keyframes pulse-mint {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-mint {
+  animation: pulse-mint 2s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+textarea:focus, input:focus, select:focus {
+  outline: none;
+  border-color: var(--color-mint) !important;
+  box-shadow: 0 0 0 1px var(--color-mint);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
