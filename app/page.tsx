@@ -3,7 +3,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import CampaignForm from "@/components/campaign-form";
 import ConceptCard from "@/components/concept-card";
-import PixelLogo from "@/components/pixel-logo";
 import LandingPreview from "@/components/landing-preview";
 import ActorPicker from "@/components/actor-picker";
 import VoicePicker from "@/components/voice-picker";
@@ -200,12 +199,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-divider bg-white/70 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-center relative">
-          <PixelLogo />
-
-          {output && (
+      <main className="max-w-6xl mx-auto px-6 py-10">
+        {output && (
+          <div className="flex justify-end mb-4">
             <button
               onClick={() => {
                 setOutput(null);
@@ -215,15 +211,12 @@ export default function Home() {
                 Object.values(pollingRef.current).forEach(clearInterval);
                 pollingRef.current = {};
               }}
-              className="absolute right-6 text-[13px] font-medium text-text-secondary hover:text-text-primary transition-colors"
+              className="text-[13px] font-medium text-text-secondary hover:text-text-primary transition-colors"
             >
               New Campaign
             </button>
-          )}
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-6 py-10">
+          </div>
+        )}
         {!output && !loading ? (
           /* ---- INPUT STATE ---- */
           <div className="max-w-lg mx-auto">
