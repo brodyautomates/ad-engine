@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: #0071E3;
-  --color-accent-hover: #0062c7;
+  --color-accent: #E86733;
+  --color-accent-hover: #d45a28;
   --color-surface: #f5f5f7;
   --color-white: #ffffff;
   --color-glass: rgba(255, 255, 255, 0.72);
@@ -98,11 +98,11 @@ textarea, input, select {
 textarea:focus, input:focus, select:focus {
   outline: none;
   border-color: var(--color-accent) !important;
-  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.12);
+  box-shadow: 0 0 0 4px rgba(232, 103, 51, 0.12);
 }
 
 ::selection {
-  background: rgba(0, 113, 227, 0.15);
+  background: rgba(232, 103, 51, 0.15);
 }
 
 ::-webkit-scrollbar {

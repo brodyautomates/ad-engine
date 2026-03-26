@@ -201,27 +201,13 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-divider bg-white/70 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-[10px] bg-gradient-to-br from-accent to-blue-400 flex items-center justify-center shadow-soft">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="23 7 16 12 23 17 23 7" />
-                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-              </svg>
-            </div>
-            <span className="text-[15px] font-semibold tracking-tight text-text-primary">
-              Ad Engine
-            </span>
-          </div>
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-center relative">
+          <span
+            className="text-[18px] font-medium tracking-tight text-text-primary"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+          >
+            claude code
+          </span>
 
           {output && (
             <button
@@ -233,7 +219,7 @@ export default function Home() {
                 Object.values(pollingRef.current).forEach(clearInterval);
                 pollingRef.current = {};
               }}
-              className="text-[13px] font-medium text-text-secondary hover:text-text-primary transition-colors"
+              className="absolute right-6 text-[13px] font-medium text-text-secondary hover:text-text-primary transition-colors"
             >
               New Campaign
             </button>

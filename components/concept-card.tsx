@@ -126,7 +126,7 @@ export default function ConceptCard({
           {videoJob.status === "idle" && (
             <button
               onClick={() => onStartArcads(concept.id)}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold text-[14px] py-3 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-accent to-orange-400 text-white font-semibold text-[14px] py-3 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all"
             >
               <svg
                 width="16"
@@ -153,10 +153,10 @@ export default function ConceptCard({
           )}
 
           {videoJob.status === "generating" && (
-            <div className="bg-purple-50 rounded-xl px-4 py-3">
+            <div className="bg-orange-50 rounded-xl px-4 py-3">
               <div className="flex items-center gap-2.5">
                 <svg
-                  className="animate-spin h-4 w-4 text-purple-500"
+                  className="animate-spin h-4 w-4 text-orange-500"
                   viewBox="0 0 24 24"
                   fill="none"
                 >
@@ -174,11 +174,11 @@ export default function ConceptCard({
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                   />
                 </svg>
-                <span className="text-[13px] font-medium text-purple-700">
+                <span className="text-[13px] font-medium text-orange-700">
                   Generating video...
                 </span>
               </div>
-              <p className="text-[12px] text-purple-500 mt-1 ml-[26px]">
+              <p className="text-[12px] text-orange-500 mt-1 ml-[26px]">
                 This usually takes 1-3 minutes
               </p>
             </div>
