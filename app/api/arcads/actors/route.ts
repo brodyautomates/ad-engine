@@ -1,22 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listActors, listSituations } from "@/lib/arcads";
+import { listSituations } from "@/lib/arcads";
 
 export async function GET(req: NextRequest) {
   try {
-    const gender = req.nextUrl.searchParams.getAll("gender");
-    const age = req.nextUrl.searchParams.getAll("age");
-    const actorId = req.nextUrl.searchParams.get("actorId");
+    const gender = req.nextUrl.searchParams.get("gender");
 
-    // If actorId is provided, return situations for that actor
-    if (actorId) {
-      const situations = await listSituations(actorId);
-      return NextResponse.json(situations);
+    // Fetch all situations (they contain actor info + thumbnails)
+    const data = await listSituations();
+    const items = data.items || data || [];
+
+    // Group by actor and filter
+    const actorMap = new Map<
+      string,
+      {
+        id: string;
+        name: string;
+        gender: string;
+        age: string;
+        imageUrl: string;
+        situations: Array<{
+          id: string;
+          tags: string[];
+          imageUrl: string;
+          previewUrl: string;
+          defaultVoiceId: string;
+        }>;
+      }
+    >();
+
+    for (const sit of items) {
+      const actor = sit.actor;
+      if (!actor) continue;
+
+      // Apply gender filter
+      if (
+        gender &&
+        gender !== "all" &&
+        actor.gender?.toLowerCase() !== gender.toLowerCase()
+      ) {
+        continue;
+      }
+
+      if (!actorMap.has(actor.id)) {
+        actorMap.set(actor.id, {
+          id: actor.id,
+          name: actor.name,
+          gender: actor.gender,
+          age: actor.age,
+          imageUrl: sit.imageUrl || "",
+          situations: [],
+        });
+      }
+
+      actorMap.get(actor.id)!.situations.push({
+        id: sit.id,
+        tags: sit.tags || [],
+        imageUrl: sit.imageUrl || "",
+        previewUrl: sit.previewUrl || "",
+        defaultVoiceId: sit.defaultVoiceId || "",
+      });
     }
 
-    const actors = await listActors({
-      gender: gender.length ? gender : undefined,
-      age: age.length ? age : undefined,
-    });
+    const actors = [...actorMap.values()].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+
     return NextResponse.json(actors);
   } catch (e) {
     const message = e instanceof Error ? e.message : "Failed to fetch actors";

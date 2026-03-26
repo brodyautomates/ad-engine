@@ -17,11 +17,25 @@ export default function CampaignForm({ onSubmit, loading }: Props) {
       targetAudience: form.get("targetAudience") as string,
       keyBenefits: form.get("keyBenefits") as string,
       tone: form.get("tone") as string,
+      websiteUrl: (form.get("websiteUrl") as string) || undefined,
     });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <label className="block text-[13px] font-medium text-text-secondary mb-1.5 tracking-tight">
+          Brand Website
+          <span className="text-text-tertiary font-normal ml-1">(optional)</span>
+        </label>
+        <input
+          name="websiteUrl"
+          type="url"
+          placeholder="https://example.com — we'll match their branding"
+          className="w-full bg-white/60 border border-divider rounded-xl px-4 py-3 text-[15px] text-text-primary placeholder:text-text-tertiary"
+        />
+      </div>
+
       <div>
         <label className="block text-[13px] font-medium text-text-secondary mb-1.5 tracking-tight">
           Product Name

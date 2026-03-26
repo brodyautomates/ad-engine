@@ -4,7 +4,7 @@ export interface CampaignInput {
   targetAudience: string;
   keyBenefits: string;
   tone: string;
-  landingPageUrl?: string;
+  websiteUrl?: string;
 }
 
 export interface AdConcept {

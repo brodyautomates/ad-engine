@@ -8,87 +8,88 @@ interface Props {
   onClose: () => void;
 }
 
-interface ActorData {
+interface SituationData {
+  id: string;
+  tags: string[];
+  imageUrl: string;
+  previewUrl: string;
+  defaultVoiceId: string;
+}
+
+interface ActorGroup {
   id: string;
   name: string;
   gender: string;
   age: string;
-  thumbnailUrl: string;
+  imageUrl: string;
+  situations: SituationData[];
 }
 
 export default function ActorPicker({ onSelect, onClose }: Props) {
-  const [actors, setActors] = useState<ActorData[]>([]);
-  const [situations, setSituations] = useState<Situation[]>([]);
-  const [selectedActorId, setSelectedActorId] = useState<string | null>(null);
+  const [actors, setActors] = useState<ActorGroup[]>([]);
+  const [selectedActor, setSelectedActor] = useState<ActorGroup | null>(null);
   const [loading, setLoading] = useState(true);
-  const [loadingSituations, setLoadingSituations] = useState(false);
   const [genderFilter, setGenderFilter] = useState<string>("all");
 
   useEffect(() => {
-    fetchActors();
+    fetchActors("all");
   }, []);
 
-  const fetchActors = async () => {
+  const fetchActors = async (gender: string) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/arcads/actors");
+      const param = gender !== "all" ? `?gender=${gender}` : "";
+      const res = await fetch(`/api/arcads/actors${param}`);
       const data = await res.json();
-      setActors(Array.isArray(data) ? data : data.data || []);
+      setActors(Array.isArray(data) ? data : []);
     } catch {
       setActors([]);
     }
     setLoading(false);
   };
 
-  const selectActor = async (actorId: string) => {
-    setSelectedActorId(actorId);
-    setLoadingSituations(true);
-    try {
-      const res = await fetch(`/api/arcads/actors?actorId=${actorId}`);
-      const data = await res.json();
-      setSituations(Array.isArray(data) ? data : data.data || []);
-    } catch {
-      setSituations([]);
-    }
-    setLoadingSituations(false);
+  const handleGenderChange = (g: string) => {
+    setGenderFilter(g);
+    setSelectedActor(null);
+    fetchActors(g);
   };
 
-  const filteredActors =
-    genderFilter === "all"
-      ? actors
-      : actors.filter(
-          (a) => a.gender?.toLowerCase() === genderFilter.toLowerCase()
-        );
+  const handleSelectSituation = (actor: ActorGroup, sit: SituationData) => {
+    onSelect({
+      id: sit.id,
+      name: `${actor.name} — ${sit.tags.join(", ")}`,
+      thumbnailUrl: sit.imageUrl,
+      actorId: actor.id,
+      actorName: actor.name,
+    });
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-elevated border border-divider w-full max-w-2xl max-h-[80vh] overflow-hidden animate-fade-up">
+      <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-elevated border border-divider w-full max-w-3xl max-h-[85vh] overflow-hidden animate-fade-up">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-divider">
           <div>
-            <h3 className="text-[17px] font-semibold text-text-primary">
-              {selectedActorId ? "Choose a Setting" : "Choose an Actor"}
+            <h3 className="text-[17px] font-medium text-text-primary">
+              {selectedActor
+                ? `${selectedActor.name} — Choose a Setting`
+                : "Choose an Actor"}
             </h3>
             <p className="text-[13px] text-text-tertiary mt-0.5">
-              {selectedActorId
-                ? "Select the scene for your video"
-                : "Select an AI avatar for your ad"}
+              {selectedActor
+                ? "Pick the scene for your video"
+                : `${actors.length} actors available`}
             </p>
           </div>
           <div className="flex items-center gap-3">
-            {selectedActorId && (
+            {selectedActor && (
               <button
-                onClick={() => {
-                  setSelectedActorId(null);
-                  setSituations([]);
-                }}
+                onClick={() => setSelectedActor(null)}
                 className="text-[13px] font-medium text-accent hover:underline"
               >
                 Back
@@ -114,13 +115,13 @@ export default function ActorPicker({ onSelect, onClose }: Props) {
           </div>
         </div>
 
-        {/* Filters (actors view) */}
-        {!selectedActorId && (
+        {/* Filters */}
+        {!selectedActor && (
           <div className="px-6 py-3 border-b border-divider flex gap-2">
             {["all", "male", "female"].map((g) => (
               <button
                 key={g}
-                onClick={() => setGenderFilter(g)}
+                onClick={() => handleGenderChange(g)}
                 className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-all ${
                   genderFilter === g
                     ? "bg-text-primary text-white"
@@ -134,90 +135,104 @@ export default function ActorPicker({ onSelect, onClose }: Props) {
         )}
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(80vh-140px)]">
+        <div className="p-5 overflow-y-auto max-h-[calc(85vh-130px)]">
           {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <div className="text-[14px] text-text-tertiary">
+            <div className="flex items-center justify-center py-20">
+              <div className="flex items-center gap-3 text-[14px] text-text-tertiary">
+                <svg
+                  className="animate-spin h-5 w-5 text-accent"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-20"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
                 Loading actors...
               </div>
             </div>
-          ) : selectedActorId ? (
-            /* Situations grid */
-            loadingSituations ? (
-              <div className="flex items-center justify-center py-16">
-                <div className="text-[14px] text-text-tertiary">
-                  Loading settings...
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 gap-3">
-                {situations.map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() => onSelect(s)}
-                    className="group relative rounded-2xl overflow-hidden border border-divider hover:border-accent/30 hover:shadow-medium transition-all"
-                  >
-                    {s.thumbnailUrl ? (
-                      <img
-                        src={s.thumbnailUrl}
-                        alt={s.name}
-                        className="w-full aspect-video object-cover"
-                      />
-                    ) : (
-                      <div className="w-full aspect-video bg-surface flex items-center justify-center">
-                        <span className="text-[13px] text-text-tertiary">
-                          {s.name}
-                        </span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                      <span className="text-[12px] font-medium text-white">
-                        {s.name}
-                      </span>
-                    </div>
-                  </button>
-                ))}
-                {situations.length === 0 && (
-                  <p className="col-span-3 text-center text-[14px] text-text-tertiary py-8">
-                    No settings available for this actor
-                  </p>
-                )}
-              </div>
-            )
-          ) : (
-            /* Actors grid */
-            <div className="grid grid-cols-4 gap-3">
-              {filteredActors.map((a) => (
+          ) : selectedActor ? (
+            /* Situations for selected actor */
+            <div className="grid grid-cols-3 gap-3">
+              {selectedActor.situations.map((sit) => (
                 <button
-                  key={a.id}
-                  onClick={() => selectActor(a.id)}
+                  key={sit.id}
+                  onClick={() => handleSelectSituation(selectedActor, sit)}
                   className="group relative rounded-2xl overflow-hidden border border-divider hover:border-accent/30 hover:shadow-medium transition-all"
                 >
-                  {a.thumbnailUrl ? (
+                  {sit.imageUrl ? (
                     <img
-                      src={a.thumbnailUrl}
+                      src={sit.imageUrl}
+                      alt={sit.tags.join(", ")}
+                      className="w-full aspect-[3/4] object-cover"
+                    />
+                  ) : (
+                    <div className="w-full aspect-[3/4] bg-surface flex items-center justify-center">
+                      <span className="text-[13px] text-text-tertiary">
+                        {sit.tags.join(", ")}
+                      </span>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                    <span className="text-[12px] font-medium text-white">
+                      {sit.tags.join(", ")}
+                    </span>
+                  </div>
+                </button>
+              ))}
+              {selectedActor.situations.length === 0 && (
+                <p className="col-span-3 text-center text-[14px] text-text-tertiary py-12">
+                  No settings available for this actor
+                </p>
+              )}
+            </div>
+          ) : (
+            /* Actor grid */
+            <div className="grid grid-cols-4 gap-3">
+              {actors.map((a) => (
+                <button
+                  key={a.id}
+                  onClick={() => setSelectedActor(a)}
+                  className="group relative rounded-2xl overflow-hidden border border-divider hover:border-accent/30 hover:shadow-medium transition-all"
+                >
+                  {a.imageUrl ? (
+                    <img
+                      src={a.imageUrl}
                       alt={a.name}
                       className="w-full aspect-[3/4] object-cover"
                     />
                   ) : (
                     <div className="w-full aspect-[3/4] bg-surface flex items-center justify-center">
-                      <span className="text-[20px]">👤</span>
+                      <span className="text-[24px] text-text-tertiary">
+                        {a.name.charAt(0)}
+                      </span>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-3">
                     <div>
-                      <p className="text-[13px] font-medium text-white">
+                      <p className="text-[13px] font-medium text-white leading-tight">
                         {a.name}
                       </p>
                       <p className="text-[11px] text-white/70">
-                        {a.age} · {a.gender}
+                        {a.age} · {a.situations.length} setting
+                        {a.situations.length !== 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
                 </button>
               ))}
-              {filteredActors.length === 0 && (
-                <p className="col-span-4 text-center text-[14px] text-text-tertiary py-8">
+              {actors.length === 0 && (
+                <p className="col-span-4 text-center text-[14px] text-text-tertiary py-12">
                   No actors found
                 </p>
               )}

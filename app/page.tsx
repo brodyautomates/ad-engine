@@ -202,11 +202,8 @@ export default function Home() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-divider bg-white/70 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-center relative">
-          <span
-            className="text-[18px] font-medium tracking-tight text-text-primary"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-          >
-            claude code
+          <span className="text-[20px] font-medium tracking-tight text-text-primary">
+            Ad Engine
           </span>
 
           {output && (

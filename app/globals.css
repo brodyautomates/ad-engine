@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Brockmann";
+  src: url("/fonts/Brockmann-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-accent: #E86733;
   --color-accent-hover: #d45a28;
@@ -13,16 +21,10 @@
   --color-divider: rgba(0, 0, 0, 0.08);
 }
 
-@font-face {
-  font-family: "SF Pro Display";
-  src: local("SF Pro Display"), local(".SF NS Display"), local("Helvetica Neue");
-}
-
 body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
-    "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Brockmann", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
