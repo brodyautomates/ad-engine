@@ -9,9 +9,7 @@ import { CampaignInput, CampaignOutput } from "@/lib/types";
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState<CampaignOutput | null>(null);
-  const [activeTab, setActiveTab] = useState<"concepts" | "landing">(
-    "concepts"
-  );
+  const [activeTab, setActiveTab] = useState<"concepts" | "landing">("concepts");
   const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async (input: CampaignInput) => {
@@ -26,9 +24,7 @@ export default function Home() {
         body: JSON.stringify(input),
       });
 
-      if (!res.ok) {
-        throw new Error("Generation failed");
-      }
+      if (!res.ok) throw new Error("Generation failed");
 
       const data: CampaignOutput = await res.json();
       setOutput(data);
@@ -54,16 +50,16 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-mint flex items-center justify-center">
+      <header className="sticky top-0 z-50 border-b border-divider bg-white/70 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-[10px] bg-gradient-to-br from-accent to-blue-400 flex items-center justify-center shadow-soft">
               <svg
-                width="18"
-                height="18"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="black"
+                stroke="white"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -72,22 +68,18 @@ export default function Home() {
                 <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
               </svg>
             </div>
-            <div>
-              <h1 className="text-lg font-semibold tracking-tight">
-                Ad Engine
-              </h1>
-              <p className="text-xs text-text-secondary">
-                Concept to campaign in seconds
-              </p>
-            </div>
+            <span className="text-[15px] font-semibold tracking-tight text-text-primary">
+              Ad Engine
+            </span>
           </div>
+
           {output && (
             <button
               onClick={() => {
                 setOutput(null);
                 setError(null);
               }}
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+              className="text-[13px] font-medium text-text-secondary hover:text-text-primary transition-colors"
             >
               New Campaign
             </button>
@@ -95,82 +87,111 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-6xl mx-auto px-6 py-10">
         {!output && !loading ? (
-          /* INPUT STATE */
-          <div className="max-w-xl mx-auto">
+          /* ---- INPUT STATE ---- */
+          <div className="max-w-lg mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold tracking-tight mb-2">
-                Create Your Ad Campaign
+              <h2 className="text-[32px] font-bold tracking-tight text-text-primary leading-tight">
+                Create your campaign.
               </h2>
-              <p className="text-text-secondary">
-                Enter your product details. We&apos;ll generate Arcads-ready
-                video concepts and a matching landing page.
+              <p className="text-[17px] text-text-secondary mt-2 leading-relaxed">
+                Generate Arcads-ready video concepts<br />
+                and a matching landing page.
               </p>
             </div>
-            <div className="glass rounded-2xl p-6">
+
+            <div className="glass shadow-medium p-7">
               <CampaignForm onSubmit={handleGenerate} loading={loading} />
             </div>
           </div>
         ) : loading ? (
-          /* LOADING STATE */
-          <div className="flex flex-col items-center justify-center py-32">
-            <div className="w-12 h-12 rounded-xl bg-mint/10 flex items-center justify-center mb-4 animate-pulse-mint">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-mint"
-              >
-                <polygon points="23 7 16 12 23 17 23 7" />
-                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-              </svg>
+          /* ---- LOADING STATE ---- */
+          <div className="flex flex-col items-center justify-center py-36">
+            <div className="relative mb-6">
+              <div className="w-16 h-16 rounded-2xl bg-accent/8 flex items-center justify-center">
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="text-accent"
+                >
+                  <polygon points="23 7 16 12 23 17 23 7" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                </svg>
+              </div>
+              <div className="absolute inset-0 rounded-2xl border-2 border-accent/20 animate-ping" />
             </div>
-            <h3 className="text-lg font-semibold mb-1">
-              Generating your campaign...
+            <h3 className="text-[17px] font-semibold text-text-primary mb-1">
+              Generating your campaign
             </h3>
-            <p className="text-sm text-text-secondary">
-              Building 4 ad concepts + a matching landing page
+            <p className="text-[14px] text-text-tertiary">
+              4 ad concepts + landing page
             </p>
+
+            {/* Progress pills */}
+            <div className="flex items-center gap-2 mt-6">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="h-1.5 w-8 rounded-full bg-accent/15 overflow-hidden"
+                >
+                  <div
+                    className="h-full bg-accent rounded-full animate-shimmer"
+                    style={{ animationDelay: `${i * 200}ms` }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ) : error ? (
-          /* ERROR STATE */
-          <div className="max-w-md mx-auto text-center py-32">
-            <p className="text-red-400 mb-4">{error}</p>
+          /* ---- ERROR STATE ---- */
+          <div className="max-w-md mx-auto text-center py-36">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+            </div>
+            <p className="text-[15px] text-red-500 mb-4">{error}</p>
             <button
               onClick={() => {
                 setError(null);
                 setOutput(null);
               }}
-              className="text-sm text-mint hover:underline"
+              className="text-[13px] font-medium text-accent hover:underline"
             >
               Try again
             </button>
           </div>
         ) : output ? (
-          /* OUTPUT STATE */
+          /* ---- OUTPUT STATE ---- */
           <div>
-            {/* Tab Navigation */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex gap-1 bg-surface-overlay rounded-lg p-1 border border-border">
+            {/* Tab Bar */}
+            <div className="flex items-center justify-between mb-7">
+              <div className="flex bg-white/60 rounded-xl p-1 border border-divider shadow-soft">
                 <button
                   onClick={() => setActiveTab("concepts")}
-                  className={`px-5 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-5 py-2 rounded-[10px] text-[13px] font-medium transition-all ${
                     activeTab === "concepts"
-                      ? "bg-mint text-black"
+                      ? "bg-white text-text-primary shadow-soft"
                       : "text-text-secondary hover:text-text-primary"
                   }`}
                 >
-                  Ad Concepts ({output.concepts.length})
+                  Ad Concepts
+                  <span className="ml-1.5 text-text-tertiary">
+                    {output.concepts.length}
+                  </span>
                 </button>
                 <button
                   onClick={() => setActiveTab("landing")}
-                  className={`px-5 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-5 py-2 rounded-[10px] text-[13px] font-medium transition-all ${
                     activeTab === "landing"
-                      ? "bg-mint text-black"
+                      ? "bg-white text-text-primary shadow-soft"
                       : "text-text-secondary hover:text-text-primary"
                   }`}
                 >
@@ -181,16 +202,16 @@ export default function Home() {
               {activeTab === "concepts" && (
                 <button
                   onClick={exportAllScripts}
-                  className="text-sm bg-mint/10 text-mint px-4 py-2 rounded-lg hover:bg-mint/20 transition-colors"
+                  className="text-[13px] font-medium bg-white border border-divider text-text-secondary px-4 py-2 rounded-xl hover:text-text-primary shadow-soft active:scale-95 transition-all"
                 >
-                  Export All Scripts
+                  Export All
                 </button>
               )}
             </div>
 
-            {/* Tab Content */}
+            {/* Content */}
             {activeTab === "concepts" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {output.concepts.map((concept, i) => (
                   <ConceptCard key={concept.id} concept={concept} index={i} />
                 ))}

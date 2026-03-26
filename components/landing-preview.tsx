@@ -27,14 +27,15 @@ export default function LandingPreview({ html }: Props) {
   };
 
   return (
-    <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex gap-1 bg-surface-overlay rounded-lg p-1 border border-border">
+    <div className="animate-fade-up">
+      {/* Controls */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex bg-white/60 rounded-xl p-1 border border-divider shadow-soft">
           <button
             onClick={() => setView("preview")}
-            className={`px-4 py-1.5 rounded-md text-sm transition-colors ${
+            className={`px-5 py-2 rounded-[10px] text-[13px] font-medium transition-all ${
               view === "preview"
-                ? "bg-mint text-black font-medium"
+                ? "bg-white text-text-primary shadow-soft"
                 : "text-text-secondary hover:text-text-primary"
             }`}
           >
@@ -42,60 +43,72 @@ export default function LandingPreview({ html }: Props) {
           </button>
           <button
             onClick={() => setView("code")}
-            className={`px-4 py-1.5 rounded-md text-sm transition-colors ${
+            className={`px-5 py-2 rounded-[10px] text-[13px] font-medium transition-all ${
               view === "code"
-                ? "bg-mint text-black font-medium"
+                ? "bg-white text-text-primary shadow-soft"
                 : "text-text-secondary hover:text-text-primary"
             }`}
           >
-            Code
+            Source
           </button>
         </div>
 
         <div className="flex gap-2">
           <button
             onClick={copyHtml}
-            className="text-xs bg-surface-overlay border border-border text-text-secondary px-3 py-1.5 rounded-lg hover:text-text-primary transition-colors"
+            className={`text-[13px] font-medium px-4 py-2 rounded-xl transition-all active:scale-95 ${
+              copied
+                ? "bg-green-50 text-green-600 border border-green-100"
+                : "bg-white border border-divider text-text-secondary hover:text-text-primary shadow-soft"
+            }`}
           >
-            {copied ? "Copied!" : "Copy HTML"}
+            {copied ? "Copied" : "Copy HTML"}
           </button>
           <button
             onClick={downloadHtml}
-            className="text-xs bg-mint/10 text-mint px-3 py-1.5 rounded-lg hover:bg-mint/20 transition-colors"
+            className="text-[13px] font-medium bg-accent text-white px-4 py-2 rounded-xl hover:bg-accent-hover active:scale-95 transition-all"
           >
             Download
           </button>
         </div>
       </div>
 
+      {/* Content */}
       {view === "preview" ? (
-        <div className="glass rounded-xl overflow-hidden glow">
-          <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-border">
-            <div className="w-3 h-3 rounded-full bg-red-500/80" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-            <div className="w-3 h-3 rounded-full bg-green-500/80" />
-            <span className="ml-3 text-xs text-text-secondary font-mono">
-              landing-page.html
-            </span>
+        <div className="glass shadow-elevated overflow-hidden">
+          {/* Browser Chrome */}
+          <div className="flex items-center gap-2 px-5 py-3 border-b border-divider bg-white/40">
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+              <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+              <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+            </div>
+            <div className="flex-1 mx-4">
+              <div className="bg-surface/80 rounded-lg px-4 py-1.5 text-[12px] text-text-tertiary text-center font-mono">
+                landing-page.html
+              </div>
+            </div>
           </div>
           <iframe
             srcDoc={html}
-            className="w-full h-[600px] bg-white"
+            className="w-full h-[620px]"
             title="Landing Page Preview"
             sandbox="allow-scripts"
           />
         </div>
       ) : (
-        <div className="glass rounded-xl overflow-hidden">
-          <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-border">
-            <div className="w-3 h-3 rounded-full bg-red-500/80" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-            <div className="w-3 h-3 rounded-full bg-green-500/80" />
-            <span className="ml-3 text-xs text-text-secondary font-mono">
-              HTML
+        <div className="glass shadow-elevated overflow-hidden">
+          <div className="flex items-center gap-2 px-5 py-3 border-b border-divider bg-white/40">
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+              <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+              <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+            </div>
+            <span className="ml-4 text-[12px] text-text-tertiary font-mono">
+              index.html
             </span>
           </div>
-          <pre className="p-4 text-sm text-text-secondary overflow-auto max-h-[600px] font-mono leading-relaxed">
+          <pre className="p-5 text-[13px] text-text-secondary overflow-auto max-h-[620px] font-mono leading-relaxed bg-white/30">
             <code>{html}</code>
           </pre>
         </div>

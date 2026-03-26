@@ -20,66 +20,95 @@ export default function ConceptCard({ concept, index }: Props) {
 
   return (
     <div
-      className="glass rounded-xl p-5 animate-fade-in"
-      style={{ animationDelay: `${index * 100}ms` }}
+      className="glass shadow-soft animate-fade-up hover:shadow-medium transition-shadow duration-300"
+      style={{ animationDelay: `${index * 80}ms` }}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <span className="text-xs font-mono text-mint">
-            CONCEPT {concept.id}
+      <div className="p-5">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-accent/8 flex items-center justify-center">
+              <span className="text-[13px] font-semibold text-accent">
+                {String(concept.id).padStart(2, "0")}
+              </span>
+            </div>
+            <div>
+              <h3 className="text-[15px] font-semibold text-text-primary leading-tight">
+                {concept.name}
+              </h3>
+              <p className="text-[12px] text-text-tertiary mt-0.5">
+                {concept.duration}
+              </p>
+            </div>
+          </div>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-text-tertiary bg-surface rounded-full px-2.5 py-1">
+            {concept.targetEmotion}
           </span>
-          <h3 className="text-lg font-semibold mt-0.5">{concept.name}</h3>
         </div>
-        <span className="text-xs bg-surface-overlay border border-border rounded-full px-3 py-1 text-text-secondary">
-          {concept.duration}
-        </span>
-      </div>
 
-      <div className="mb-3">
-        <p className="text-sm text-text-secondary mb-1">Hook</p>
-        <p className="text-mint font-medium">&ldquo;{concept.hook}&rdquo;</p>
-      </div>
-
-      <div className="mb-3">
-        <p className="text-sm text-text-secondary mb-1">Script</p>
-        <p
-          className={`text-sm leading-relaxed ${expanded ? "" : "line-clamp-3"}`}
-        >
-          {concept.script}
-        </p>
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="text-xs text-mint mt-1 hover:underline"
-        >
-          {expanded ? "Show less" : "Show full script"}
-        </button>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
-        <div>
-          <p className="text-text-secondary text-xs">Tone</p>
-          <p>{concept.toneDirection}</p>
+        {/* Hook */}
+        <div className="mb-4 bg-accent/5 rounded-xl px-4 py-3">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-accent/60 mb-1">
+            Hook
+          </p>
+          <p className="text-[14px] font-medium text-text-primary leading-snug">
+            &ldquo;{concept.hook}&rdquo;
+          </p>
         </div>
-        <div>
-          <p className="text-text-secondary text-xs">Emotion</p>
-          <p>{concept.targetEmotion}</p>
-        </div>
-        <div className="col-span-2">
-          <p className="text-text-secondary text-xs">Visual Notes</p>
-          <p>{concept.visualNotes}</p>
-        </div>
-      </div>
 
-      <div className="flex items-center justify-between pt-3 border-t border-border">
-        <p className="text-sm">
-          <span className="text-text-secondary">CTA:</span> {concept.cta}
-        </p>
-        <button
-          onClick={copyScript}
-          className="text-xs bg-mint/10 text-mint px-3 py-1.5 rounded-lg hover:bg-mint/20 transition-colors"
-        >
-          {copied ? "Copied!" : "Copy Script"}
-        </button>
+        {/* Script */}
+        <div className="mb-4">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-text-tertiary mb-1.5">
+            Script
+          </p>
+          <p
+            className={`text-[14px] leading-relaxed text-text-secondary ${
+              expanded ? "" : "line-clamp-3"
+            }`}
+          >
+            {concept.script}
+          </p>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-[13px] font-medium text-accent mt-1.5 hover:underline"
+          >
+            {expanded ? "Show less" : "Read full script"}
+          </button>
+        </div>
+
+        {/* Meta Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="bg-surface/80 rounded-xl px-3 py-2.5">
+            <p className="text-[11px] text-text-tertiary mb-0.5">Tone</p>
+            <p className="text-[13px] font-medium text-text-primary">
+              {concept.toneDirection}
+            </p>
+          </div>
+          <div className="bg-surface/80 rounded-xl px-3 py-2.5">
+            <p className="text-[11px] text-text-tertiary mb-0.5">Visuals</p>
+            <p className="text-[13px] font-medium text-text-primary line-clamp-2">
+              {concept.visualNotes}
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-4 border-t border-divider">
+          <p className="text-[13px] text-text-secondary">
+            <span className="text-text-tertiary">CTA: </span>
+            {concept.cta}
+          </p>
+          <button
+            onClick={copyScript}
+            className={`text-[13px] font-medium px-4 py-2 rounded-xl transition-all active:scale-95 ${
+              copied
+                ? "bg-green-50 text-green-600"
+                : "bg-accent/8 text-accent hover:bg-accent/12"
+            }`}
+          >
+            {copied ? "Copied" : "Copy Script"}
+          </button>
+        </div>
       </div>
     </div>
   );
