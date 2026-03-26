@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import CampaignForm from "@/components/campaign-form";
 import ConceptCard from "@/components/concept-card";
+import PixelLogo from "@/components/pixel-logo";
 import LandingPreview from "@/components/landing-preview";
 import ActorPicker from "@/components/actor-picker";
 import VoicePicker from "@/components/voice-picker";
@@ -202,9 +203,7 @@ export default function Home() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-divider bg-white/70 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-center relative">
-          <span className="text-[20px] font-medium tracking-tight text-text-primary">
-            Ad Engine
-          </span>
+          <PixelLogo />
 
           {output && (
             <button
